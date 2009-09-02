@@ -166,7 +166,6 @@ package com.apdevblog.ui.video
 		 */
 		public function load(videoUrl:String):void
 		{
-			trace("load()");
 			if(videoUrl == null)
 			{
 				trace("load() >>> videoUrl not set!");
@@ -214,7 +213,6 @@ package com.apdevblog.ui.video
 		 */
 		public function play():void
 		{
-			trace("play()");
 			if(!_loaded)
 			{
 				_loadBeforePlay = true;
@@ -472,13 +470,12 @@ package com.apdevblog.ui.video
 		 */
 		private function _togglePlayPause():void
 		{
-			trace("_togglePlayPause() >>>> " + videoState);
 			if(videoState == ApdevVideoState.VIDEO_STATE_PLAYING)
 			{
 				pause();
 			}
 			else if(videoState == ApdevVideoState.VIDEO_STATE_PAUSED ||
-					ApdevVideoState.VIDEO_STATE_EMPTY)
+					videoState == ApdevVideoState.VIDEO_STATE_EMPTY)
 			{
 				play();
 			}
