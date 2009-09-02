@@ -111,7 +111,6 @@ package com.apdevblog.ui.video.controls
 			_draw();
 			
 			addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown, false, 0, true);
-			addEventListener(MouseEvent.MOUSE_UP, onMouseUp, false, 0, true);
 		}
 		
 		/**
@@ -143,6 +142,7 @@ package com.apdevblog.ui.video.controls
 		 */
 		private function onMouseDown(event:MouseEvent):void
 		{
+			stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp, false, 0, true);
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove, false, 0, true);
 		}
 		
@@ -151,6 +151,7 @@ package com.apdevblog.ui.video.controls
 		 */
 		private function onMouseUp(event:MouseEvent):void
 		{
+			stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 		}
 	}

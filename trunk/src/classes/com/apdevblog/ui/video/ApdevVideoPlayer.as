@@ -98,6 +98,7 @@ package com.apdevblog.ui.video
 		private var _loadTimer:Timer;
 		private var _positionTimer:Timer;
 		//
+		private var _videoUrl:String;
 		private var _offset:Number;
 		private var _timeOffset:Number;
 		private var _scrubbingIndex:int;
@@ -131,6 +132,7 @@ package com.apdevblog.ui.video
 		private var _imageOverlay:Loader;
 		private var _image:Sprite;
 		private var _imageOverlayIcon:IconPlay;
+		private var _loadBeforePlay:Boolean;
 
 		/**
 		 * creates a new ApdevVideoPlayer with specified dimensions.
@@ -164,6 +166,7 @@ package com.apdevblog.ui.video
 		 */
 		public function load(videoUrl:String):void
 		{
+			trace("load()");
 			if(videoUrl == null)
 			{
 				trace("load() >>> videoUrl not set!");
@@ -171,23 +174,20 @@ package com.apdevblog.ui.video
 			}
 			
 			videoMetaData = null;
+			_videoUrl = videoUrl;
 			
-			_ns.play(videoUrl);
-
-			_video.attachNetStream(_ns);
-			_video.visible = true;
-
-			_loaded = true;
-						
-			_loadTimer.start();
-			_positionTimer.start();
-			
-			if(!_autoPlay)
+			if(_autoPlay || _loadBeforePlay)
 			{
-				pause();
-			}
-			else
-			{
+				_ns.play(videoUrl);
+				
+				_video.attachNetStream(_ns);
+				_video.visible = true;
+	
+				_loaded = true;
+							
+				_loadTimer.start();
+				_positionTimer.start();
+				
 				// hide image
 				_image.visible = false;
 			}
@@ -214,8 +214,11 @@ package com.apdevblog.ui.video
 		 */
 		public function play():void
 		{
+			trace("play()");
 			if(!_loaded)
 			{
+				_loadBeforePlay = true;
+				load(_videoUrl);
 				return;
 			}
 			
@@ -344,6 +347,7 @@ package com.apdevblog.ui.video
 			_timeOffset = 0;
 			_scrubbingIndex = 0;
 			_autoPlay = false;
+			_loadBeforePlay = false;
 			_lastFullscreenTakeover = _fullscreenTakeover = false;
 			
 			if(width < ApdevVideoPlayer.MIN_WIDTH)
@@ -446,6 +450,11 @@ package com.apdevblog.ui.video
 		 */
 		private function _toggleFullscreen():void
 		{
+			if(videoMetaData == null)
+			{
+				return;
+			}
+			
 			if(stage.displayState == StageDisplayState.NORMAL)
 			{
 				_lastFullscreenTakeover = fullscreenTakeover; 
@@ -463,11 +472,13 @@ package com.apdevblog.ui.video
 		 */
 		private function _togglePlayPause():void
 		{
+			trace("_togglePlayPause() >>>> " + videoState);
 			if(videoState == ApdevVideoState.VIDEO_STATE_PLAYING)
 			{
 				pause();
 			}
-			else if(videoState == ApdevVideoState.VIDEO_STATE_PAUSED)
+			else if(videoState == ApdevVideoState.VIDEO_STATE_PAUSED ||
+					ApdevVideoState.VIDEO_STATE_EMPTY)
 			{
 				play();
 			}
@@ -485,10 +496,6 @@ package com.apdevblog.ui.video
 		{
 			_videoControls.visible = show;
 		}
-
-
-
-
 
 		/**
 		 * event handler - called when videoplayer is added to stage
