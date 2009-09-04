@@ -294,7 +294,7 @@ package com.apdevblog.ui.video
 				videoMetaData = new VideoMetadataVo(data);
 				if(!isNaN(videoMetaData.width) && !isNaN(videoMetaData.height))
 				{
-					_resizeVideo(videoMetaData.width, videoMetaData.height);
+					_resizeVideo(_videoPlayerWidth, _videoPlayerHeight);
 				}
 			}
 		}
@@ -350,7 +350,7 @@ package com.apdevblog.ui.video
 			
 			if(width < ApdevVideoPlayer.MIN_WIDTH)
 			{
-				var videoRatio:Number = width / height;
+				var videoRatio:Number = (height > 0) ? width / height : 4 / 3;
 				_videoPlayerWidth = ApdevVideoPlayer.MIN_WIDTH;
 				_videoPlayerHeight = ApdevVideoPlayer.MIN_WIDTH / videoRatio;
 			}
@@ -976,6 +976,11 @@ package com.apdevblog.ui.video
 		
 		public function set videostill(previewUrlOrRequest:*):void
 		{
+			if(previewUrlOrRequest == null)
+			{
+				return;
+			}
+			
 			_previewUrlOrRequest = previewUrlOrRequest;
 			
 			if(_previewUrlOrRequest is URLRequest)
