@@ -140,46 +140,14 @@ package com.apdevblog.ui.video.controls
 
 		private function onMouseOver(event:MouseEvent):void
 		{
-//			var clr:Color = new Color();
-//			clr.setTint(0xFFFFFF, 1);
-//			
-//			_pause.transform.colorTransform = clr;
-//			_play.transform.colorTransform = clr;
-			
 			_pause.filters = [new GlowFilter(0xFFFFFF, 0.45)];
-			_play.filters = [new GlowFilter(0xFFFFFF, 0.45)];
-			
-//			switch(_state)
-//			{
-//				case ApdevVideoPlayer.VIDEO_STATE_PLAYING:
-//				break;
-//				
-//				case ApdevVideoPlayer.VIDEO_STATE_PAUSED:
-//				case ApdevVideoPlayer.VIDEO_STATE_STOPPED:
-//				break;
-//			}			
+			_play.filters = [new GlowFilter(0xFFFFFF, 0.45)];			
 		}
 
 		private function onMouseOut(event:MouseEvent):void
 		{
-//			var clr:Color = new Color();
-//			clr.setTint(0xFFFFFF, 0);
-//			
-//			_pause.transform.colorTransform = clr;
-//			_play.transform.colorTransform = clr;
-			
 			_pause.filters = [];
-			_play.filters = [];
-			
-//			switch(_state)
-//			{
-//				case ApdevVideoPlayer.VIDEO_STATE_PLAYING:
-//				break;
-//				
-//				case ApdevVideoPlayer.VIDEO_STATE_PAUSED:
-//				case ApdevVideoPlayer.VIDEO_STATE_STOPPED:
-//				break;
-//			}			
+			_play.filters = [];			
 		}		
 	}
 }

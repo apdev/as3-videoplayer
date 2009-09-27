@@ -114,9 +114,9 @@ package com.apdevblog.ui.video.controls
 		}
 		
 		/**
-		 * event handler - called when user drags the mouse.
+		 * calculates the new volume value and fires event.
 		 */
-		private function onMouseMove(event:MouseEvent):void
+		private function _updateVolume():void
 		{
 			var mX:int = mouseX;
 			var vol:Number;
@@ -138,6 +138,14 @@ package com.apdevblog.ui.video.controls
 		}
 		
 		/**
+		 * event handler - called when user drags the mouse.
+		 */
+		private function onMouseMove(event:MouseEvent):void
+		{
+			_updateVolume();
+		}
+		
+		/**
 		 * event handler - called when user presses button.
 		 */
 		private function onMouseDown(event:MouseEvent):void
@@ -153,6 +161,8 @@ package com.apdevblog.ui.video.controls
 		{
 			stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+			
+			_updateVolume();
 		}
 	}
 }

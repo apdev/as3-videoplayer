@@ -21,6 +21,7 @@
  */
 package com.apdevblog.examples 
 {
+	import com.apdevblog.events.video.VideoControlsEvent;
 	import com.apdevblog.ui.video.ApdevVideoPlayer;
 
 	import flash.display.Sprite;
@@ -59,6 +60,9 @@ package com.apdevblog.examples
 			// add videoplayer to stage
 			addChild(video);
 			
+			// add eventlistener
+			video.addEventListener(VideoControlsEvent.STATE_UPDATE, onStateUpdate, false, 0, true);
+			
 			// position the videoplayer's controls at the bottom of the video
 			video.controlsOverVideo = false;
 			// controls should not fade out (when not in fullscreen mode)
@@ -69,6 +73,14 @@ package com.apdevblog.examples
 			video.autoPlay = false;
 			// load video
 			video.load("video01.mp4");
+		}
+		
+		/**
+		 * event listener - called when videoplayer's state changes.
+		 */
+		private function onStateUpdate(event:VideoControlsEvent):void
+		{
+			trace("onStateUpdate() >>> " + event.data);
 		}
 	}
 }

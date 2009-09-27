@@ -28,6 +28,10 @@ function configPage() {
     setRowColorsInitial(true, "ProtectedMethod");   
     setRowColorsInitial(true, "Event");
     setRowColorsInitial(true, "Style");
+    
+    setRowColorsInitial(true, "SkinPart");
+    setRowColorsInitial(true, "SkinState");
+    
     setRowColorsInitial(true, "Constant");
     if (isEclipse()) {
         if (window.name != "classFrame")
@@ -111,25 +115,32 @@ function titleBar_setSubTitle(title)
     if (isEclipse() || top.titlebar)
         findTitleTableObject("subTitle").childNodes.item(0).data = title;
 }
-function titleBar_setSubNav(showConstants,showProperties,showStyles,showEffects,showEvents,showConstructor,showMethods,showExamples,
+function titleBar_setSubNav(showConstants,showProperties,showStyles,showSkinPart,showSkinState,showEffects,showEvents,showConstructor,showMethods,showExamples,
                 showPackageConstants,showPackageProperties,showPackageFunctions,showInterfaces,showClasses,showPackageUse)
 {
     if (isEclipse() || top.titlebar)
     {
         findTitleTableObject("propertiesLink").style.display = showProperties ? "inline" : "none";
-        findTitleTableObject("propertiesBar").style.display = (showProperties && (showPackageProperties || showConstructor || showMethods || showPackageFunctions || showEvents || showStyles || showEffects || showConstants || showPackageConstants || showInterfaces || showClasses || showPackageUse || showExamples)) ? "inline" : "none";
+        findTitleTableObject("propertiesBar").style.display = (showProperties && (showPackageProperties || showConstructor || showMethods || showPackageFunctions || showEvents || showStyles || showSkinPart || showSkinState || showEffects || showConstants || showPackageConstants || showInterfaces || showClasses || showPackageUse || showExamples)) ? "inline" : "none";
         findTitleTableObject("packagePropertiesLink").style.display = showPackageProperties ? "inline" : "none";
-        findTitleTableObject("packagePropertiesBar").style.display = (showPackageProperties && (showConstructor || showMethods || showPackageFunctions || showEvents || showStyles || showConstants || showEffects || showPackageConstants || showInterfaces || showClasses || showPackageUse || showExamples)) ? "inline" : "none";
+        findTitleTableObject("packagePropertiesBar").style.display = (showPackageProperties && (showConstructor || showMethods || showPackageFunctions || showEvents || showStyles || showSkinPart || showSkinState || showConstants || showEffects || showPackageConstants || showInterfaces || showClasses || showPackageUse || showExamples)) ? "inline" : "none";
         findTitleTableObject("constructorLink").style.display = showConstructor ? "inline" : "none";
-        findTitleTableObject("constructorBar").style.display = (showConstructor && (showMethods || showPackageFunctions || showEvents || showStyles || showEffects || showConstants || showPackageConstants || showInterfaces || showClasses || showPackageUse || showExamples)) ? "inline" : "none";
+        findTitleTableObject("constructorBar").style.display = (showConstructor && (showMethods || showPackageFunctions || showEvents || showStyles || showSkinPart || showSkinState || showEffects || showConstants || showPackageConstants || showInterfaces || showClasses || showPackageUse || showExamples)) ? "inline" : "none";
         findTitleTableObject("methodsLink").style.display = showMethods ? "inline" : "none";
-        findTitleTableObject("methodsBar").style.display = (showMethods && (showPackageFunctions || showEvents || showStyles || showEffects || showConstants || showPackageConstants || showInterfaces || showClasses || showPackageUse || showExamples)) ? "inline" : "none";
+        findTitleTableObject("methodsBar").style.display = (showMethods && (showPackageFunctions || showEvents || showStyles || showSkinPart || showSkinState || showEffects || showConstants || showPackageConstants || showInterfaces || showClasses || showPackageUse || showExamples)) ? "inline" : "none";
         findTitleTableObject("packageFunctionsLink").style.display = showPackageFunctions ? "inline" : "none";
-        findTitleTableObject("packageFunctionsBar").style.display = (showPackageFunctions && (showEvents || showStyles || showEffects || showConstants || showPackageConstants || showInterfaces || showClasses || showPackageUse || showExamples)) ? "inline" : "none";
+        findTitleTableObject("packageFunctionsBar").style.display = (showPackageFunctions && (showEvents || showStyles || showSkinPart || showSkinState || showEffects || showConstants || showPackageConstants || showInterfaces || showClasses || showPackageUse || showExamples)) ? "inline" : "none";
         findTitleTableObject("eventsLink").style.display = showEvents ? "inline" : "none";
-        findTitleTableObject("eventsBar").style.display = (showEvents && (showStyles || showEffects || showConstants || showPackageConstants || showInterfaces || showClasses || showPackageUse || showExamples)) ? "inline" : "none";
+        findTitleTableObject("eventsBar").style.display = (showEvents && (showStyles || showSkinPart || showSkinState || showEffects || showConstants || showPackageConstants || showInterfaces || showClasses || showPackageUse || showExamples)) ? "inline" : "none";
         findTitleTableObject("stylesLink").style.display = showStyles ? "inline" : "none";
-        findTitleTableObject("stylesBar").style.display = (showStyles && (showEffects || showConstants || showPackageConstants || showInterfaces || showClasses || showPackageUse || showExamples)) ? "inline" : "none";
+        findTitleTableObject("stylesBar").style.display = (showStyles && (showSkinPart || showSkinState || showEffects || showConstants || showPackageConstants || showInterfaces || showClasses || showPackageUse || showExamples)) ? "inline" : "none";
+        
+        findTitleTableObject("SkinPartLink").style.display = showSkinPart ? "inline" : "none";
+        findTitleTableObject("SkinPartBar").style.display = (showSkinPart && (showSkinState || showEffects || showConstants || showPackageConstants || showInterfaces || showClasses || showPackageUse || showExamples)) ? "inline" : "none";
+        
+        findTitleTableObject("SkinStateLink").style.display = showSkinState ? "inline" : "none";
+	findTitleTableObject("SkinStateBar").style.display = (showSkinState && (showEffects || showConstants || showPackageConstants || showInterfaces || showClasses || showPackageUse || showExamples)) ? "inline" : "none";
+                
         findTitleTableObject("effectsLink").style.display = showEffects ? "inline" : "none";
         findTitleTableObject("effectsBar").style.display = (showEffects && (showConstants || showPackageConstants || showInterfaces || showClasses || showPackageUse || showExamples)) ? "inline" : "none";
         findTitleTableObject("constantsLink").style.display = showConstants ? "inline" : "none";
@@ -192,6 +203,10 @@ function showHideInherited()
     setInheritedVisible(getCookie("showInheritedProtectedMethod") == "true", "ProtectedMethod");
     setInheritedVisible(getCookie("showInheritedEvent") == "true", "Event");
     setInheritedVisible(getCookie("showInheritedStyle") == "true", "Style");
+    
+    setInheritedVisible(getCookie("showInheritedSkinPart") == "true", "SkinPart");
+    setInheritedVisible(getCookie("showInheritedSkinState") == "true", "SkinState");
+    
     setInheritedVisible(getCookie("showInheritedEffect") == "true", "Effect");
 }
 function setInheritedVisible(show, selectorText)
