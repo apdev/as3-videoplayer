@@ -21,14 +21,12 @@
  */
 package com.apdevblog.ui.video
 {
-	import com.apdevblog.ui.video.controls.IconPlay;
 	import com.apdevblog.events.video.VideoControlsEvent;
 	import com.apdevblog.model.vo.VideoMetadataVo;
+	import com.apdevblog.ui.video.controls.ImageOverlay;
 	import com.apdevblog.utils.Draw;
 
 	import flash.display.DisplayObjectContainer;
-	import flash.display.Loader;
-	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.display.StageAlign;
@@ -49,7 +47,17 @@ package com.apdevblog.ui.video
 	import flash.net.NetStream;
 	import flash.net.URLRequest;
 	import flash.utils.Timer;
-
+	
+	/**
+	 * Event is fired when STATE of the videoplayer changes.
+	 * 
+	 * @eventType com.apdevblog.events.video.VideoControlsEvent.STATE_UPDATE
+	 *
+	 * @playerversion Flash 9
+	 * @langversion 3.0
+	 */
+	[Event(name="stateUpdate", type="com.apdevblog.events.video.VideoControlsEvent")]
+	
 	/**
 	 * Custom actionscript-only videoplayer.
 	 * 
@@ -59,7 +67,7 @@ package com.apdevblog.ui.video
 	 * <p>Player can display every format Flashplayer 9 supports, e.g. flv 
 	 * (sorenson, on2), mov (h.264), mp4.</p>
 	 * 
-	 * @example <listing>
+	 * <listing>
 	 * import com.apdevblog.ui.video.ApdevVideoPlayer;
 	 *  
 	 * var video:ApdevVideoPlayer = new ApdevVideoPlayer(320, 240);
@@ -129,9 +137,7 @@ package com.apdevblog.ui.video
 		private var _fadeOutTime:int;
 		//
 		private var _previewUrlOrRequest:*;
-		private var _imageOverlay:Loader;
-		private var _image:Sprite;
-		private var _imageOverlayIcon:IconPlay;
+		private var _image:ImageOverlay;
 		private var _loadBeforePlay:Boolean;
 
 		/**
@@ -316,23 +322,9 @@ package com.apdevblog.ui.video
 			controlsOverVideo = false;
 			addChild(_videoControls);
 			
-			_image = new Sprite();
-			_image.buttonMode = true;
+			_image = new ImageOverlay(videoPlayerWidth, videoPlayerHeight);
 			_image.visible = false;
 			addChild(_image);
-			
-			_imageOverlay = new Loader();
-			_image.addChild(_imageOverlay);
-			
-			_imageOverlayIcon = new IconPlay();
-			_imageOverlayIcon.x = Math.round(videoPlayerWidth*0.5);
-			_imageOverlayIcon.y = Math.round(videoPlayerHeight*0.5);
-			_image.addChild(_imageOverlayIcon);
-			
-			var imageMask:Shape = Draw.rect(videoPlayerWidth, videoPlayerHeight, 0xFF0000, 1);
-			addChild(imageMask);
-			
-			_imageOverlay.mask = imageMask;
 		}
 		
 		/**
@@ -399,12 +391,6 @@ package com.apdevblog.ui.video
 			
 			// 
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage, false, 0, true);
-			
-			// image overlay
-			_image.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverImage, false, 0, true);
-			_image.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutImage, false, 0, true);
-			_image.addEventListener(MouseEvent.CLICK, onClickVideo, false, 0, true);
-			_imageOverlay.contentLoaderInfo.addEventListener(Event.COMPLETE, onImageLoaded, false, 0, true);
 		}
 		
 		/**
@@ -617,60 +603,6 @@ package com.apdevblog.ui.video
 		{
 			_toggleVideoControls(false);
 		}
-		
-		/**
-		 * event handler - called when image is loaded.
-		 */
-		private function onImageLoaded(event:Event):void
-		{
-			var imageRatio:Number = _imageOverlay.width / _imageOverlay.height;
-			var playerRatio:Number = _video.width / _video.height;
-			var fraction:Number;
-			
-			if(imageRatio > playerRatio)
-			{
-				_imageOverlay.width = _video.width;
-				_imageOverlay.height = _video.width / imageRatio;
-				
-				if(_imageOverlay.height < _video.height)
-				{
-					fraction = _video.height / _imageOverlay.height;
-					_imageOverlay.width *= fraction;
-					_imageOverlay.height *= fraction;
-				}
-			}
-			else
-			{
-				_imageOverlay.width = _video.height * imageRatio;
-				_imageOverlay.height = _video.height;
-
-				if(_imageOverlay.width < _video.width)
-				{
-					fraction = _video.width / _imageOverlay.width;
-					_imageOverlay.width *= fraction;
-					_imageOverlay.height *= fraction;
-				}
-			}
-			
-			_imageOverlay.x = Math.round( (_video.width - _imageOverlay.width) * 0.5 );
-			_imageOverlay.y = Math.round( (_video.height - _imageOverlay.height) * 0.5 ); 
-		}
-		
-		/**
-		 * event handler - called when mouse leaves image.
-		 */
-		private function onMouseOutImage(event:MouseEvent):void
-		{
-			_imageOverlayIcon.alpha = 0.3;			
-		}
-
-		/**
-		 * event handler - called when mouse rolls over image.
-		 */
-		private function onMouseOverImage(event:MouseEvent):void
-		{
-			_imageOverlayIcon.alpha = 0.5;
-		}
 
 		/**
 		 * event handler - called when mouse moves.
@@ -710,6 +642,10 @@ package com.apdevblog.ui.video
 		 */
 		private function onTogglePlay(event:VideoControlsEvent):void
 		{
+			if(event.cancelable)
+			{
+				event.stopImmediatePropagation();
+			}
 			_togglePlayPause();
 		}
 		
@@ -718,6 +654,10 @@ package com.apdevblog.ui.video
 		 */
 		private function onSeek(event:VideoControlsEvent):void
 		{
+			if(event.cancelable)
+			{
+				event.stopImmediatePropagation();
+			}
 			seek(event.data as Number, event.type == VideoControlsEvent.SCRUB);
 		}
 
@@ -836,6 +776,8 @@ package com.apdevblog.ui.video
 			{
 				_videoControls.state = state;
 			}
+			
+			dispatchEvent(new VideoControlsEvent(VideoControlsEvent.STATE_UPDATE, true, true, state));
 		}
 		
 		/**
@@ -983,19 +925,19 @@ package com.apdevblog.ui.video
 			
 			_previewUrlOrRequest = previewUrlOrRequest;
 			
-			if(_previewUrlOrRequest is URLRequest)
-			{
-				_imageOverlay.load(_previewUrlOrRequest);
-			}
-			else if(_previewUrlOrRequest is String)
-			{
-				var req:URLRequest = new URLRequest(_previewUrlOrRequest);
-				_imageOverlay.load(req);
-			}
-			
 			if(videoState == ApdevVideoState.VIDEO_STATE_EMPTY)
 			{
 				_image.visible = true;
+				
+				if(_previewUrlOrRequest is URLRequest)
+				{
+					_image.load(_previewUrlOrRequest);
+				}
+				else if(_previewUrlOrRequest is String)
+				{
+					var req:URLRequest = new URLRequest(_previewUrlOrRequest);
+					_image.load(req);
+				}
 			}
 		}
 	}

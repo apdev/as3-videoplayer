@@ -47,6 +47,8 @@ package com.apdevblog.events.video
 		//
 		public static const ENTER_FULLSCREEN:String = "enterFullscreen";
 		//
+		public static const STATE_UPDATE:String = "stateUpdate";
+		//
 		//
 		private var _data:*;
 		
