@@ -21,6 +21,7 @@
  */
 package com.apdevblog.ui.video.controls
 {
+	import com.apdevblog.ui.video.style.ApdevVideoPlayerDefaultStyle;
 	import com.apdevblog.utils.Draw;
 
 	import flash.display.Graphics;
@@ -48,13 +49,14 @@ package com.apdevblog.ui.video.controls
 	{
 		private var _iconToFullscreen:Sprite;
 		private var _iconToNormal:Sprite;
+		private var _style:ApdevVideoPlayerDefaultStyle;
 
 		/**
 		 * creates fullscreen button and initializes it.
 		 */
-		public function BtnFullscreen()
+		public function BtnFullscreen(style:ApdevVideoPlayerDefaultStyle)
 		{
-			_init();
+			_init(style);
 		}
 		
 		/**
@@ -83,14 +85,14 @@ package com.apdevblog.ui.video.controls
 		 */
 		private function _draw():void
 		{
-			var	bg:Shape = Draw.gradientRect(25, 23, 90, 0x393324, 0x000000, 1, 1);
+			var	bg:Shape = Draw.gradientRect(25, 23, 90, _style.btnGradient1, _style.btnGradient2, 1, 1);
 			addChild(bg);
 			
 			// icon 2 fullscreen
 			_iconToFullscreen = new Sprite();
 			var g:Graphics = _iconToFullscreen.graphics;
 			
-			g.beginFill(0xc6ae6a, 1);
+			g.beginFill(_style.btnIcon, 1);
 			g.drawRect(2, 2, 3, 1);
 			g.drawRect(2, 3, 1, 2);			
 			g.drawRect(20, 2, 3, 1);
@@ -112,7 +114,7 @@ package com.apdevblog.ui.video.controls
 			_iconToNormal.visible = false;
 			g = _iconToNormal.graphics;
 			
-			g.beginFill(0xc6ae6a, 1);
+			g.beginFill(_style.btnIcon, 1);
 			
 			g.drawRect(6, 10, 3, 1);
 			g.drawRect(8, 8, 1, 2);
@@ -139,8 +141,9 @@ package com.apdevblog.ui.video.controls
 		/**
 		 * initializes all important attributes and event listeners.
 		 */
-		private function _init():void
+		private function _init(style:ApdevVideoPlayerDefaultStyle):void
 		{
+			_style = style;
 			buttonMode = true;
 			mouseChildren = false;
 
@@ -165,8 +168,12 @@ package com.apdevblog.ui.video.controls
 		 */
 		private function onMouseOver(event:MouseEvent):void
 		{
-			_iconToFullscreen.filters = [new GlowFilter(0xFFFFFF, 0.45)];
-			_iconToNormal.filters = [new GlowFilter(0xFFFFFF, 0.45)];
+			var filter:GlowFilter = new GlowFilter();
+			filter.color = _style.btnRollOverGlow;
+			filter.alpha = _style.btnRollOverGlowAlpha;
+			
+			_iconToFullscreen.filters = [filter];
+			_iconToNormal.filters = [filter];
 		}
 
 		/**

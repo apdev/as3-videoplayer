@@ -21,19 +21,20 @@
  */
 package com.apdevblog.ui.video
 {
-	import com.apdevblog.ui.video.controls.VideoTimeLabel;
-	import com.apdevblog.ui.video.controls.VideoStatusBar;
-	import com.apdevblog.ui.video.controls.BtnSound;
-	import com.apdevblog.ui.video.controls.BtnPlayPause;
-	import com.apdevblog.ui.video.controls.BtnFullscreen;
 	import com.apdevblog.events.video.VideoControlsEvent;
 	import com.apdevblog.model.vo.VideoMetadataVo;
+	import com.apdevblog.ui.video.controls.BtnFullscreen;
+	import com.apdevblog.ui.video.controls.BtnPlayPause;
+	import com.apdevblog.ui.video.controls.BtnSound;
+	import com.apdevblog.ui.video.controls.VideoStatusBar;
+	import com.apdevblog.ui.video.controls.VideoTimeLabel;
+	import com.apdevblog.ui.video.style.ApdevVideoPlayerDefaultStyle;
 	import com.apdevblog.utils.Draw;
 
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
-	
+
 	/**
      *  Dispatched when the user pressed play button.
      *
@@ -74,15 +75,16 @@ package com.apdevblog.ui.video
 		private var _fullscreen:BtnFullscreen;
 		private var _time:VideoTimeLabel;
 		private var _meta:VideoMetadataVo;
+		private var _style:ApdevVideoPlayerDefaultStyle;
 
 		/**
 		 * creates a new container for the videoplayer's controls.
 		 * 
 		 * @param width		width of the whole container
 		 */
-		public function ApdevVideoControls(width:int)
+		public function ApdevVideoControls(width:int, style:ApdevVideoPlayerDefaultStyle)
 		{
-			_init(width);
+			_init(width, style);
 		}
 		
 		/**
@@ -113,6 +115,7 @@ package com.apdevblog.ui.video
 		 */
 		public function updatePlaying(fraction:Number):void
 		{
+			trace("updatePlaying() >>> " + fraction);
 			_bar.updatePlaying(fraction);
 			
 			if(_meta != null)
@@ -126,34 +129,41 @@ package com.apdevblog.ui.video
 		 */
 		private function _draw():void
 		{
-			_bg = Draw.rect(width, 29, 0x000000, 0);
+			_bg = Draw.rect(width, 29, _style.controlsBg, _style.controlsBgAlpha);
 			addChild(_bg);
 			
-			_play = new BtnPlayPause();
-			_play.x = 0;
+			var availableWidth:Number = width - _style.controlsPaddingLeft - _style.controlsPaddingRight;
+			var curSpaceUsed:Number = 0;
+			
+			_play = new BtnPlayPause(_style);
+			_play.x = _style.controlsPaddingLeft;
 			_play.y = 3;
 			addChild(_play);
 			
-			_mute = new BtnSound();
-			_time = new VideoTimeLabel();			
-			_fullscreen = new BtnFullscreen();
+			curSpaceUsed += _play.width;
 			
-			_bar = new VideoStatusBar(width - (_play.width + _mute.width + _fullscreen.width + _time.width + 4 * 3));
+			_mute = new BtnSound(_style);
+			_time = new VideoTimeLabel(_style);
+			_fullscreen = new BtnFullscreen(_style);
 			
-			_time.x = width - _fullscreen.width - _mute.width - 3 - _time.width - 3;
+			curSpaceUsed += _mute.width + _fullscreen.width + _time.width;
+						
+			_bar = new VideoStatusBar(availableWidth - (curSpaceUsed + 4 * 3), _style);
+			
+			_time.x = width - _style.controlsPaddingRight - _fullscreen.width - _mute.width - 3 - _time.width - 3;
 			_time.y = 3;
 			
-			_mute.x = width - _fullscreen.width - _mute.width - 3;
+			_mute.x = width - _style.controlsPaddingRight - _fullscreen.width - _mute.width - 3;
 			_mute.y = 3;
 			
-			_fullscreen.x = width - _fullscreen.width;
+			_fullscreen.x = width - _style.controlsPaddingRight - _fullscreen.width;
 			_fullscreen.y = 3;
 			
 			_bar.x = _play.x + _play.width + 3;
 			_bar.y = 11; 
 
-			addChild(_bar);
 			addChild(_time);
+			addChild(_bar);
 			addChild(_mute);
 			addChild(_fullscreen);
 		}
@@ -161,9 +171,10 @@ package com.apdevblog.ui.video
 		/**
 		 * initializes all important attributes and event listeners.
 		 */
-		private function _init(width:int):void
+		private function _init(width:int, style:ApdevVideoPlayerDefaultStyle):void
 		{
 			_controlsWidth = width;
+			_style = style;
 			
 			_draw();
 

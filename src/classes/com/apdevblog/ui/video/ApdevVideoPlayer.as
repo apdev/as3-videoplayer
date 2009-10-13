@@ -24,6 +24,7 @@ package com.apdevblog.ui.video
 	import com.apdevblog.events.video.VideoControlsEvent;
 	import com.apdevblog.model.vo.VideoMetadataVo;
 	import com.apdevblog.ui.video.controls.ImageOverlay;
+	import com.apdevblog.ui.video.style.ApdevVideoPlayerDefaultStyle;
 	import com.apdevblog.utils.Draw;
 
 	import flash.display.DisplayObjectContainer;
@@ -47,7 +48,7 @@ package com.apdevblog.ui.video
 	import flash.net.NetStream;
 	import flash.net.URLRequest;
 	import flash.utils.Timer;
-	
+
 	/**
 	 * Event is fired when STATE of the videoplayer changes.
 	 * 
@@ -62,7 +63,7 @@ package com.apdevblog.ui.video
 	 * Custom actionscript-only videoplayer.
 	 * 
 	 * <p>VideoPlayer with controls for play/pause, volume,
-	 * fullscreen and staturbar.</p>
+	 * fullscreen and statusbar.</p>
 	 * 
 	 * <p>Player can display every format Flashplayer 9 supports, e.g. flv 
 	 * (sorenson, on2), mov (h.264), mp4.</p>
@@ -132,6 +133,7 @@ package com.apdevblog.ui.video
 		private var _lastY:Number;
 		private var _lastParent:DisplayObjectContainer;
 		private var _lastLevel:int;
+		private var _style:ApdevVideoPlayerDefaultStyle;
 		//
 		private var _fadeOutTimer:Timer;
 		private var _fadeOutTime:int;
@@ -146,9 +148,9 @@ package com.apdevblog.ui.video
 		 * @param width 	width of the videoplayer's video	@default 140 
 		 * @param height 	height of the videoplayer's video
 		 */
-		public function ApdevVideoPlayer(width:int, height:int)
+		public function ApdevVideoPlayer(width:int, height:int, colors:ApdevVideoPlayerDefaultStyle=null)
 		{
-			_init(width, height);
+			_init(width, height, colors);
 		}
 		
 		/**
@@ -311,18 +313,28 @@ package com.apdevblog.ui.video
 		private function _draw():void
 		{
 			_videoBg = new Sprite();
-			_videoBg.addChild(Draw.gradientRect(videoPlayerWidth, videoPlayerHeight, 90, 0x393324, 0x000000, 1, 1));
+			_videoBg.addChild(
+								Draw.gradientRect(
+													videoPlayerWidth, 
+													videoPlayerHeight, 
+													90, 
+													_style.bgGradient1, 
+													_style.bgGradient2, 
+													_style.bgGradient1Alpha, 
+													_style.bgGradient2Alpha
+													)
+							);
 			addChild(_videoBg);
 			
 			_video = new Video(videoPlayerWidth, videoPlayerHeight);
 			_video.smoothing = true;
 			addChild(_video);
 			
-			_videoControls = new ApdevVideoControls(videoPlayerWidth);
+			_videoControls = new ApdevVideoControls(videoPlayerWidth, _style);
 			controlsOverVideo = false;
 			addChild(_videoControls);
 			
-			_image = new ImageOverlay(videoPlayerWidth, videoPlayerHeight);
+			_image = new ImageOverlay(videoPlayerWidth, videoPlayerHeight, _style);
 			_image.visible = false;
 			addChild(_image);
 		}
@@ -330,7 +342,7 @@ package com.apdevblog.ui.video
 		/**
 		 * initializes all important attributes and event listeners.
 		 */
-		private function _init(width:int, height:int):void
+		private function _init(width:int, height:int, style:ApdevVideoPlayerDefaultStyle):void
 		{
 			_trackIndex = 0;
 			_offset = 0;
@@ -339,6 +351,15 @@ package com.apdevblog.ui.video
 			_autoPlay = false;
 			_loadBeforePlay = false;
 			_lastFullscreenTakeover = _fullscreenTakeover = false;
+			
+			if(style == null)
+			{
+				_style = new ApdevVideoPlayerDefaultStyle();
+			}
+			else
+			{
+				_style = style;
+			}
 			
 			if(width < ApdevVideoPlayer.MIN_WIDTH)
 			{
@@ -738,6 +759,7 @@ package com.apdevblog.ui.video
 			
 			if(videoState == ApdevVideoState.VIDEO_STATE_STOPPED)
 			{
+				_videoControls.updatePlaying(1);
 				_positionTimer.reset();
 			}
 		}

@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="language" content="en">
+
+<title>apdev videoplayer embed version</title>
+<script type="text/javascript" src="js/swfobject.js"></script>
+<script type="text/javascript">
+    // <![CDATA[
+
+    var width=380;
+    var height=240;
+	
+    var flashVersion = "9.0.115";
+
+    var movie = "htmlvideo_skinned.swf";
+
+    var movieName = "flashMovie";
+    var bgColor = "#ffffff";
+
+    var express = "expressinstall.swf";
+    
+    var replaceDiv = "flashcontent";
+
+    var flashvars = {};
+    flashvars.v = "video01.mp4";
+    flashvars.img = "videostill.jpg";
+    flashvars.playIcon = "#ff0000";
+    flashvars.controlsBg = "#ff00ff";
+    flashvars.controlsBgAlpha = 1.0;
+
+    var params = {};
+    params.bgcolor = bgColor;
+    params.menu = "false";
+    params.scale = "noscale";
+    params.allowFullScreen = "true";
+    params.allowScriptAccess = "always";
+
+    var attributes = {};
+    attributes.id = movieName;
+
+    swfobject.embedSWF(movie, replaceDiv, width, height, flashVersion, express, flashvars, params, attributes);
+
+  // ]]>
+</script>
+<style type="text/css">
+  
+  html
+  {
+    
+  }
+  
+	body 
+	{
+		background-color: #ffffff;
+		color: #606060;
+		font: 0.85em verdana,arial,helvetica,sans-serif;
+		margin: 25px;
+		padding: 0;
+	}
+
+	#flashcontent 
+	{
+
+	}
+
+</style>
+</head>
+<body>
+  <h1>example of the Apdev Videoplayer embeddded into HTML page</h1>
+  <p>You can now easily embed our Videoplayer into HTML and pass all important variables (video-url, previewimage-url) to the swf via flashvars.</p>
+  <p><b>NEW</b>: you can set styles via flashvars too!</p>
+  <p>
+  because we're using swfobject it looks like this:
+  </p>
+  <p>
+    <pre>
+...
+var width=380;
+var height=240;
+...
+var flashvars = {};
+flashvars.v = "video01.mp4";
+flashvars.img = "videostill.jpg";
+...
+
+// *** set styles ***
+
+flashvars.playIcon = "#ff0000";
+flashvars.controlsBg = "#ff00ff";
+flashvars.controlsBgAlpha = 1.0;
+
+...
+swfobject.embedSWF(movie, replaceDiv, width, height, flashVersion, express, flashvars, params, attributes);
+    </pre>
+  </p>
+  <p>
+  The Videoplayer resizes itself to fill the whole SWF - so in this case the player is 380x240px.
+  </p>
+	<div id="flashdiv">
+    <div id="flashcontent">
+      alternativ content
+    </div>
+	</div>
+	<p>
+    <ul>
+      <li>google code: <a href="http://code.google.com/p/apdev-videoplayer/" target="_blank">http://code.google.com/p/apdev-videoplayer/</a></li>
+      <li>blog post: <a href="http://apdevblog.com/as3-open-source-videoplayer-out-now/" target="_blank">http://apdevblog.com/as3-open-source-videoplayer-out-now/</a></li>
+    </ul>
+	</p>
+	<p>&copy; 2009 apdeblog.com - and some text beneath the video player</p>	
+</body>
+</html>

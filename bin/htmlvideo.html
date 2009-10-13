@@ -68,10 +68,29 @@
 </head>
 <body>
   <h1>example of the Apdev Videoplayer embeddded into HTML page</h1>
-  <p>some other text ... i don't really know what it could look like!?</p>
+  <p>You can now easily embed our Videoplayer into HTML and pass all important variables (video-url, previewimage-url) to the swf via flashvars.</p>
+  <p>
+  because we're using swfobject it looks like this:
+  </p>
+  <p>
+    <pre>
+...
+var width=380;
+var height=240;
+...
+var flashvars = {};
+flashvars.v = "video01.mp4";
+flashvars.img = "videostill.jpg";
+...
+swfobject.embedSWF(movie, replaceDiv, width, height, flashVersion, express, flashvars, params, attributes);
+    </pre>
+  </p>
+  <p>
+  The Videoplayer resizes itself to fill the whole SWF - so in this case the player is 380x240px.
+  </p>
 	<div id="flashdiv">
     <div id="flashcontent">
-      alternativ content
+      you should see our videoplayer here (alternativ content)
     </div>
 	</div>
 	<p>
@@ -81,5 +100,6 @@
     </ul>
 	</p>
 	<p>&copy; 2009 apdeblog.com - and some text beneath the video player</p>
+	
 </body>
 </html>

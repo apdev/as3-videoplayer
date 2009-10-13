@@ -38,6 +38,19 @@ package com.apdevblog.utils
 		public static var RIGHT:Number = 1 << 2;
 		
 		/**
+		 * converts hexadecimal string to int.
+		 * 
+		 * @param hex	hexadecimal String (w/ or w/o #)
+		 * 
+		 * @return		corresponding int value
+		 */
+		public static function hexStringToInt(hex:String):int
+		{
+			hex = replace(hex, "#", "");
+			return parseInt("0x" + hex.substr(0,6));
+		}
+		
+		/**
 		 * dumps Object to String.
 		 * 
 		 * @param obj	Object to be dumped

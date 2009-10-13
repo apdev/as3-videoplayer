@@ -21,6 +21,7 @@
  */
 package com.apdevblog.ui.video.controls
 {
+	import com.apdevblog.ui.video.style.ApdevVideoPlayerDefaultStyle;
 	import com.apdevblog.events.video.VideoControlsEvent;
 	import com.apdevblog.model.vo.VideoMetadataVo;
 	import com.apdevblog.utils.Draw;
@@ -73,15 +74,16 @@ package com.apdevblog.ui.video.controls
 		private var _knob:Sprite;
 		private var _barLoadingMask:Shape;
 		private var _componentWidth:int;
+		private var _style:ApdevVideoPlayerDefaultStyle;
 
 		/**
 		 * creates status bar.
 		 * 
 		 * @param width		bar's initial width
 		 */
-		public function VideoStatusBar(width:int)
+		public function VideoStatusBar(width:int, style:ApdevVideoPlayerDefaultStyle)
 		{
-			_init(width);
+			_init(width, style);
 		}
 		
 		/**
@@ -139,7 +141,7 @@ package com.apdevblog.ui.video.controls
 			
 			_barLoading = new Sprite();
 			_barLoading.buttonMode = true;
-			_barLoading.addChild(Draw.rect(_barBg.width, 5, 0x58503c, 1));
+			_barLoading.addChild(Draw.rect(_barBg.width, 5, _style.barLoading, 1));
 			_barLoading.addEventListener(MouseEvent.MOUSE_DOWN, onClickLoadingBar, false, 0, true);
 			addChild(_barLoading);
 			
@@ -150,7 +152,7 @@ package com.apdevblog.ui.video.controls
 			
 			_barPlaying = new Sprite();
 			_barPlaying.mouseEnabled = false;
-			_barPlaying.addChild(Draw.rect(_barBg.width, 5, 0xc6ae6a, 1));
+			_barPlaying.addChild(Draw.rect(_barBg.width, 5, _style.barPlaying, 1));
 			addChild(_barPlaying);
 			
 			_barLoadingMask.scaleX = 0;
@@ -162,24 +164,25 @@ package com.apdevblog.ui.video.controls
 		 */
 		private function _draw():void
 		{			
-			_barBg = Draw.rect(_componentWidth, 5, 0x58503c, 0.5);
+			_barBg = Draw.rect(_componentWidth, 5, _style.barBg, _style.barBgAlpha);
 			addChild(_barBg);
 			
 			_createDynamicBars();
 			
 			_knob = new Sprite();
 			_knob.mouseEnabled = false;
-			_knob.addChild(Draw.rect(5, 11, 0x000000, 0.2, -2, -3));	
-			_knob.addChild(Draw.rect(3, 9, 0xFFFFFF, 1, -1, -2));	
+			_knob.addChild(Draw.rect(5, 11, _style.barKnobOutline, _style.barKnobOutlineAlpha, -2, -3));	
+			_knob.addChild(Draw.rect(3, 9, _style.barKnob, 1, -1, -2));	
 			addChild(_knob);			
 		}
 
 		/**
 		 * initializes all important attributes and event listeners.
 		 */
-		private function _init(width:int):void
+		private function _init(width:int, style:ApdevVideoPlayerDefaultStyle):void
 		{
 			_componentWidth = width;
+			_style = style;
 			
 			_draw();
 		}
@@ -238,6 +241,7 @@ package com.apdevblog.ui.video.controls
 		 */
 		override public function set width(width:Number):void
 		{
+			trace("VIDEOSTATUSBAR >>> set width() >>> ");
 			_barBg.width = width;
 			
 			_createDynamicBars();
