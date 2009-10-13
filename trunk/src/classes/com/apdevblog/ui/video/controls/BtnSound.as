@@ -22,12 +22,13 @@
 package com.apdevblog.ui.video.controls
 {
 	import com.apdevblog.events.video.VideoControlsEvent;
+	import com.apdevblog.ui.video.style.ApdevVideoPlayerDefaultStyle;
 	import com.apdevblog.utils.Draw;
 
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
-	
+
 	/**
      *  Dispatched when the user changes volume of video.
      *
@@ -52,13 +53,14 @@ package com.apdevblog.ui.video.controls
 	public class BtnSound extends Sprite 
 	{
 		private var _bars:Array;
+		private var _style:ApdevVideoPlayerDefaultStyle;
 
 		/**
 		 * creates fullscreen button and initializes it.
 		 */
-		public function BtnSound()
+		public function BtnSound(style:ApdevVideoPlayerDefaultStyle)
 		{
-			_init();
+			_init(style);
 		}
 		
 		/**
@@ -84,14 +86,14 @@ package com.apdevblog.ui.video.controls
 		 */
 		private function _draw():void
 		{
-			var	bg:Shape = Draw.gradientRect(31, 23, 90, 0x393324, 0x000000, 1, 1);
+			var	bg:Shape = Draw.gradientRect(31, 23, 90, _style.btnGradient1, _style.btnGradient2, 1, 1);
 			addChild(bg);
 			
 			_bars = new Array();
 			
 			for(var i:Number = 0;i < 8; i++) 
 			{
-				var bar:Shape = Draw.rect(2, i + 1, 0xc6ae6a, 1);
+				var bar:Shape = Draw.rect(2, i + 1, _style.btnIcon, 1);
 				bar.x = 4 + (i * 3);
 				bar.y = 16 - (1 + i);
 				addChild(bar);
@@ -103,8 +105,9 @@ package com.apdevblog.ui.video.controls
 		/**
 		 * initializes all important attributes and event listeners.
 		 */
-		private function _init():void
+		private function _init(style:ApdevVideoPlayerDefaultStyle):void
 		{
+			_style = style;
 			mouseEnabled = true;
 			buttonMode = true;
 			

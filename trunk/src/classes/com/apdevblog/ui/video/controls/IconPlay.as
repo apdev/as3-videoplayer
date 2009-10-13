@@ -21,6 +21,7 @@
  */
 package com.apdevblog.ui.video.controls 
 {
+	import com.apdevblog.ui.video.style.ApdevVideoPlayerDefaultStyle;
 	import com.apdevblog.utils.Draw;
 
 	import flash.display.Graphics;
@@ -45,19 +46,19 @@ package com.apdevblog.ui.video.controls
 		/**
 		 * creates a play icon ("o" and draws a ">" in the middle).
 		 */
-		public function IconPlay()
+		public function IconPlay(_style:ApdevVideoPlayerDefaultStyle)
 		{
 			mouseEnabled = false;
 			mouseChildren = false;
 			
 			alpha = 0.3;
 			
-			var circle:Shape = Draw.donut(28, 40, 360, 0xFFFFFF, 1);
+			var circle:Shape = Draw.donut(28, 40, 360, _style.playIcon, _style.playIconAlpha);
 			addChild(circle);
 			
 			var g:Graphics = graphics;
 			
-			g.beginFill(0xFFFFFF, 1);
+			g.beginFill(_style.playIcon, _style.playIconAlpha);
 			g.moveTo(-9, -16);
 			g.lineTo(15, 0);
 			g.lineTo(-9, 16);

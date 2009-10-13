@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="language" content="en">
+
+<title>apdev videoplayer</title>
+<script type="text/javascript" src="js/swfobject.js"></script>
+<script type="text/javascript">
+    // <![CDATA[
+
+    var width=550;
+    var height=400;
+	
+    var flashVersion = "9.0.115";
+
+    var movie = "videoplayer_skinned.swf";
+
+    var movieName = "flashMovie";
+    var bgColor = "#ffffff";
+
+    var express = "expressinstall.swf";
+
+    // set these for osxmousewheel.js:
+    var mw_flashMovieId = movieName;           // the id/name of your flash app's HTML DOM element
+    var mw_flashContainerId = "flashdiv";     // the id/name of the flash element's surrounding div element
+    var replaceDiv = "flashcontent";
+
+    var flashvars = {};
+    flashvars.testMode = "phil";
+
+    var params = {};
+    params.bgcolor = bgColor;
+    params.menu = "false";
+    params.scale = "noscale";
+    params.allowFullScreen = "true";
+    params.allowScriptAccess = "always";
+
+    var attributes = {};
+    attributes.id = mw_flashMovieId;
+
+    swfobject.embedSWF(movie, replaceDiv, width, height, flashVersion, express, flashvars, params, attributes);
+
+  // ]]>
+</script>
+<style type="text/css">
+  
+  html
+  {
+    overflow:auto;
+  }
+  
+	body 
+	{
+		background-color: #ffffff;
+		color: #606060;
+		font: .5em/1.0em verdana,arial,helvetica,sans-serif;
+		margin: 0;
+		padding: 0;
+	}
+
+	#flashcontent 
+	{
+
+	}
+
+</style>
+</head>
+<body>
+	<div id="flashdiv">
+	<div id="flashcontent">
+		<table width="100%" height="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+			<tr align="center" valign="middle">
+				<td><div><a href="http://www.adobe.com/go/getflashplayer" alt="Flashplayer herunterladen" title="Flashplayer herunterladen">Flashplayer</a></div></td>
+			</tr>
+		</table>
+	</div>
+	</div>
+</body>
+</html>

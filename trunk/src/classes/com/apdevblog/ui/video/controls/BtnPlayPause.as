@@ -21,6 +21,7 @@
  */
 package com.apdevblog.ui.video.controls
 {
+	import com.apdevblog.ui.video.style.ApdevVideoPlayerDefaultStyle;
 	import com.apdevblog.ui.video.ApdevVideoState;
 	import com.apdevblog.utils.Draw;
 
@@ -49,13 +50,14 @@ package com.apdevblog.ui.video.controls
 		private var _play:Sprite;
 		private var _pause:Sprite;
 		private var _state:String;
+		private var _style:ApdevVideoPlayerDefaultStyle;
 
 		/**
 		 * creates play/pause button and initializes it.
 		 */
-		public function BtnPlayPause()
+		public function BtnPlayPause(style:ApdevVideoPlayerDefaultStyle)
 		{
-			_init();
+			_init(style);
 		}
 		
 		/**
@@ -85,7 +87,7 @@ package com.apdevblog.ui.video.controls
 
 		private function _draw():void
 		{
-			var	bg:Shape = Draw.gradientRect(23, 23, 90, 0x393324, 0x000000, 1, 1);
+			var	bg:Shape = Draw.gradientRect(23, 23, 90, _style.btnGradient1, _style.btnGradient2, 1, 1);
 			addChild(bg);
 			
 			var g:Graphics;
@@ -94,7 +96,7 @@ package com.apdevblog.ui.video.controls
 			_play = new Sprite();
 			g = _play.graphics;
 			
-			g.beginFill(0xc6ae6a, 1);
+			g.beginFill(_style.btnIcon, 1);
 			g.drawRect(9, 5, 1, 1);
 			g.drawRect(9, 6, 2, 1);
 			g.drawRect(9, 7, 3, 1);
@@ -117,7 +119,7 @@ package com.apdevblog.ui.video.controls
 			_pause.visible = false;
 			g = _pause.graphics;
 			
-			g.beginFill(0xc6ae6a, 1);
+			g.beginFill(_style.btnIcon, 1);
 			g.drawRect(7, 5, 3, 12);
 			g.drawRect(13, 5, 3, 12);
 			g.endFill();
@@ -125,8 +127,9 @@ package com.apdevblog.ui.video.controls
 			addChild(_pause);
 		}
 
-		private function _init():void
+		private function _init(style:ApdevVideoPlayerDefaultStyle):void
 		{
+			_style = style;
 			buttonMode = true;
 			mouseChildren = false;
 			
@@ -140,8 +143,12 @@ package com.apdevblog.ui.video.controls
 
 		private function onMouseOver(event:MouseEvent):void
 		{
-			_pause.filters = [new GlowFilter(0xFFFFFF, 0.45)];
-			_play.filters = [new GlowFilter(0xFFFFFF, 0.45)];			
+			var filter:GlowFilter = new GlowFilter();
+			filter.color = _style.btnRollOverGlow;
+			filter.alpha = _style.btnRollOverGlowAlpha;
+			
+			_pause.filters = [filter];
+			_play.filters = [filter];			
 		}
 
 		private function onMouseOut(event:MouseEvent):void

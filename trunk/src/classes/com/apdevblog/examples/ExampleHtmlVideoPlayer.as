@@ -13,8 +13,6 @@ package com.apdevblog.examples
 	 * 
 	 * @playerversion Flash 9
  	 * @langversion 3.0
-	 * 
-	 * ActionScript 3.0 / Flash 9
 	 *
 	 * @package    com.apdevblog.examples
 	 * @author     Philipp Kyeck / phil[at]apdevblog.com

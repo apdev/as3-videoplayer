@@ -21,9 +21,8 @@
  */
 package com.apdevblog.ui.video.controls 
 {
-	import flash.net.URLRequest;
-
 	import com.apdevblog.events.video.VideoControlsEvent;
+	import com.apdevblog.ui.video.style.ApdevVideoPlayerDefaultStyle;
 	import com.apdevblog.utils.Draw;
 
 	import flash.display.Loader;
@@ -31,6 +30,7 @@ package com.apdevblog.ui.video.controls
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.net.URLRequest;
 
 	/**
 	 * Image overlay - can e.g. display a screenshot of the video.
@@ -50,16 +50,17 @@ package com.apdevblog.ui.video.controls
 		private var _imageOverlayIcon:IconPlay;
 		private var _videoPlayerWidth:Number;
 		private var _videoPlayerHeight:Number;
-		
+		private var _style:ApdevVideoPlayerDefaultStyle;
+
 		/**
 		 * creates image overlay.
 		 * 
 		 * @param w		width of the videoplayer
 		 * @param h		height of the videoplayer
 		 */
-		public function ImageOverlay(w:Number, h:Number)
+		public function ImageOverlay(w:Number, h:Number, style:ApdevVideoPlayerDefaultStyle)
 		{
-			_init(w, h);
+			_init(w, h, style);
 		}
 		
 		/**
@@ -84,7 +85,7 @@ package com.apdevblog.ui.video.controls
 			_imageLoader = new Loader();
 			addChild(_imageLoader);
 			
-			_imageOverlayIcon = new IconPlay();
+			_imageOverlayIcon = new IconPlay(_style);
 			_imageOverlayIcon.x = Math.round(_videoPlayerWidth*0.5);
 			_imageOverlayIcon.y = Math.round(_videoPlayerHeight*0.5);
 			addChild(_imageOverlayIcon);
@@ -98,10 +99,11 @@ package com.apdevblog.ui.video.controls
 		/**
 		 * initializes component.
 		 */
-		private function _init(w:Number, h:Number):void
+		private function _init(w:Number, h:Number, style:ApdevVideoPlayerDefaultStyle):void
 		{
 			_videoPlayerWidth = w;
 			_videoPlayerHeight = h;
+			_style = style;
 			
 			buttonMode = true;
 			
@@ -129,8 +131,8 @@ package com.apdevblog.ui.video.controls
 		private function onImageLoaded(event:Event):void
 		{
 			var imageRatio:Number = _imageLoader.width / _imageLoader.height;
-			var w:Number = _videoPlayerWidth;	// _video.width
-			var h:Number = _videoPlayerHeight;	// _video.height
+			var w:Number = _videoPlayerWidth;
+			var h:Number = _videoPlayerHeight;
 			var playerRatio:Number = w / h;
 			var fraction:Number;
 			

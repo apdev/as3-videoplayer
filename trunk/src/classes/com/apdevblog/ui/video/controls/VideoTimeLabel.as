@@ -22,6 +22,7 @@
 package com.apdevblog.ui.video.controls 
 {
 	import com.apdevblog.model.vo.VideoMetadataVo;
+	import com.apdevblog.ui.video.style.ApdevVideoPlayerDefaultStyle;
 	import com.apdevblog.utils.Draw;
 	import com.apdevblog.utils.StringUtils;
 
@@ -56,13 +57,14 @@ package com.apdevblog.ui.video.controls
 		private var _state:String;
 		private var _meta:VideoMetadataVo;
 		private var _currentTime:Number;
+		private var _style:ApdevVideoPlayerDefaultStyle;
 
 		/**
 		 * creates a label to display already played/still remaining time.
 		 */
-		public function VideoTimeLabel()
+		public function VideoTimeLabel(style:ApdevVideoPlayerDefaultStyle)
 		{
-			_init();
+			_init(style);
 		}
 		
 		/**
@@ -79,11 +81,15 @@ package com.apdevblog.ui.video.controls
 				// cound down from total to 0
 				var total:int = _meta != null ? _meta.duration : 0; 
 				time = total - time;
-				_txt.textColor = 0x58503c;
+				if(time < 0)
+				{
+					time = 0;
+				}
+				_txt.textColor = _style.timerDown;
 			}
 			else
 			{
-				_txt.textColor = 0xc6ae6a;				
+				_txt.textColor = _style.timerUp;				
 			}
 			
 			var seconds:Number = time % 60;
@@ -111,7 +117,7 @@ package com.apdevblog.ui.video.controls
 		 */
 		private function _draw():void
 		{
-			_bg = Draw.rect(34, 23, 0xFF0000, 0);
+			_bg = Draw.rect(34, 23, _style.timerBg, _style.timerBgAlpha);
 			addChild(_bg);
 			
 			_txt = new TextField();
@@ -122,7 +128,7 @@ package com.apdevblog.ui.video.controls
 			
 			var tf:TextFormat = new TextFormat();
 			tf.font = "Arial";
-			tf.color = 0xc6ae6a;
+			tf.color = _style.timerUp;
 			tf.size = 10;
 			tf.kerning = true;
 			tf.align = TextFormatAlign.CENTER;
@@ -136,10 +142,11 @@ package com.apdevblog.ui.video.controls
 		/**
 		 * initializes all important attributes and event listeners.
 		 */
-		private function _init():void
+		private function _init(style:ApdevVideoPlayerDefaultStyle):void
 		{
 			mouseChildren = false;
 			buttonMode = true;
+			_style = style;
 			_state = VideoTimeLabel.STATE_COUNT_UP;
 			_currentTime = 0;
 			

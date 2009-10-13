@@ -122,7 +122,6 @@ package com.apdevblog.utils
 			var g:Graphics = mc.graphics;
 			
 			g.beginBitmapFill(bmp);
-			//g.drawRoundRect(0, 0, w, h, radius, radius);
 			
 			g.moveTo(radius, 0);
 			g.curveTo(w - radius, 0, w - radius, 0);
