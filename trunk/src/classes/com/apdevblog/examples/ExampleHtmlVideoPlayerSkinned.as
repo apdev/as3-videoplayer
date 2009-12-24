@@ -21,8 +21,10 @@
  */
 package com.apdevblog.examples 
 {
-	import com.apdevblog.examples.style.CustomStyleExample;
+	import com.apdevblog.events.video.VideoControlsEvent;
+	import com.apdevblog.examples.style.CustomStyleGrey;
 	import com.apdevblog.ui.video.ApdevVideoPlayer;
+	import com.apdevblog.ui.video.ApdevVideoState;
 
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
@@ -43,6 +45,15 @@ package com.apdevblog.examples
 	 */
 	public class ExampleHtmlVideoPlayerSkinned extends Sprite 
 	{
+		public static const PLAYLIST_DELIM:String = "|";
+		//
+		private var _playlist:Array;
+		private var _hasPlayist:Boolean;
+		private var _currentVideo:int;
+		private var _repeat:Boolean;
+		private var _videoUrl:String;
+		private var _videoPlayer:ApdevVideoPlayer;
+		
 		/**
 		 * adding onEnterFrame listener and setting stage attributes.
 		 */
@@ -64,36 +75,87 @@ package com.apdevblog.examples
 		private function _init():void
 		{
 			// get flashvars-parameters
-			var vUrl:String = loaderInfo.parameters["v"];
+			_videoUrl = loaderInfo.parameters["v"];
 			var vScreen:String = loaderInfo.parameters["img"];
 			
 			// create own style
-			var style:CustomStyleExample = new CustomStyleExample();
+			var style:CustomStyleGrey = new CustomStyleGrey();
 			// flag to tell the player to ignore style passed via flashvars
 			style.ignoreFlashvars = false;
 			// pass flashvars to be parsed for style information
 			style.feedFlashvars(loaderInfo.parameters);
 			
-			// create videoplayer
-			var video:ApdevVideoPlayer = new ApdevVideoPlayer(stage.stageWidth, stage.stageHeight, style);
+			// playlist + repeat variables			
+			_hasPlayist = false;
+			_currentVideo = 0;
+			_playlist = [];
+			_repeat = loaderInfo.parameters["repeat"] == "true";
 			
+			// check for playlist
+			if(_videoUrl.indexOf(ExampleHtmlVideoPlayer.PLAYLIST_DELIM) != -1)
+			{
+				_hasPlayist = true;
+				_playlist = _videoUrl.split(ExampleHtmlVideoPlayer.PLAYLIST_DELIM);
+				
+				_videoUrl = _playlist[_currentVideo];
+			}
+			
+			// create videoplayer
+			_videoPlayer = new ApdevVideoPlayer(stage.stageWidth, stage.stageHeight, style);
+
+			// add eventlistener
+			_videoPlayer.addEventListener(VideoControlsEvent.STATE_UPDATE, onStateUpdate, false, 0, true);
+
 			// add videoplayer to stage
-			addChild(video);
+			addChild(_videoPlayer);
 			
 			// position the videoplayer's controls at the bottom of the video
-			video.controlsOverVideo = true;
+			_videoPlayer.controlsOverVideo = true;
 			
 			// controls should not fade out (when not in fullscreen mode)
-			video.controlsAutoHide = true;
-			
-			// load preview image
-			video.videostill = vScreen;
+			_videoPlayer.controlsAutoHide = true;
 			
 			// set video's autoplay to false
-			video.autoPlay = false;
+			_videoPlayer.autoPlay = loaderInfo.parameters["autoplay"] == "true";
+			
+			// load preview image
+			if(!_videoPlayer.autoPlay)
+			{
+				_videoPlayer.videostill = vScreen;
+			}
 			
 			// load video
-			video.load(vUrl);
+			_videoPlayer.load(_videoUrl);
+		}
+		
+		/**
+		 * plays next video in playlist.
+		 */
+		private function _playNext():void
+		{
+			++_currentVideo;
+			if(_currentVideo > _playlist.length-1)
+			{
+				if(_repeat)
+				{
+					if(_playlist.length > 0)
+					{
+						_currentVideo = 0;
+					}
+					else
+					{
+						_videoPlayer.play();
+						return;
+					}
+				}
+				else
+				{
+					return;
+				}
+			}
+			
+			_videoUrl = _playlist[_currentVideo];
+			_videoPlayer.load(_videoUrl);
 		}
 		
 		/**
@@ -105,6 +167,17 @@ package com.apdevblog.examples
 			{
 				removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 				_init();
+			}
+		}
+		
+		/**
+		 * state update event handler
+		 */		
+		private function onStateUpdate(event:VideoControlsEvent):void
+		{
+			if(event.data == ApdevVideoState.VIDEO_STATE_STOPPED)
+			{
+				_playNext();
 			}
 		}
 	}

@@ -24,6 +24,7 @@
     var express = "expressinstall.swf";
     
     var replaceDiv = "flashcontent";
+    var replaceDiv2 = "flashcontent2";
 
     var flashvars = {};
     flashvars.v = "video01.mp4";
@@ -31,7 +32,12 @@
     flashvars.playIcon = "#ff0000";
     flashvars.controlsBg = "#ff00ff";
     flashvars.controlsBgAlpha = 1.0;
-
+    
+    var flashvars2 = {};
+    flashvars2.v = "video01.mp4|video02.mp4";
+    flashvars2.img = "videostill.jpg";
+    flashvars2.repeat = true;
+    
     var params = {};
     params.bgcolor = bgColor;
     params.menu = "false";
@@ -43,6 +49,8 @@
     attributes.id = movieName;
 
     swfobject.embedSWF(movie, replaceDiv, width, height, flashVersion, express, flashvars, params, attributes);
+    
+    swfobject.embedSWF(movie, replaceDiv2, width, height, flashVersion, express, flashvars2, params, attributes);
 
   // ]]>
 </script>
@@ -72,12 +80,26 @@
 <body>
   <h1>example of the Apdev Videoplayer embeddded into HTML page</h1>
   <p>You can now easily embed our Videoplayer into HTML and pass all important variables (video-url, previewimage-url) to the swf via flashvars.</p>
-  <p><b>NEW</b>: you can set styles via flashvars too!</p>
+  <p></p>
+  <p><b>NEW v1.02</b>: you can set styles via flashvars too!</p>
+  <p><b>NEW v1.03</b>: html videoplayer accepts playlists with more than one video</p>
+  <p></p>
   <p>
-  because we're using swfobject it looks like this:
+  ... and because we're using swfobject it looks like this:<br /><br /><br />
   </p>
-  <p>
-    <pre>
+  
+  <table width="810" border="0">
+    <tr>
+      <th>Styles applied via flashvars</th>
+      <td></td>
+      <th>no styles applied / playlist of videos</th>
+    </tr>
+  
+    <tr>
+      <td width="380" valign="top">
+      
+        <p>
+          <pre>
 ...
 var width=380;
 var height=240;
@@ -94,23 +116,74 @@ flashvars.controlsBg = "#ff00ff";
 flashvars.controlsBgAlpha = 1.0;
 
 ...
-swfobject.embedSWF(movie, replaceDiv, width, height, flashVersion, express, flashvars, params, attributes);
+swfobject.embedSWF(movie, replaceDiv, width, height, 
+     flashVersion, express, flashvars, 
+     params, attributes);
+          </pre>
+        </p>
+        <p>
+        The Videoplayer resizes itself to fill the whole SWF - so in this case the player is 380x240px.
+        </p>
+      </td>
+      
+      <td>&nbsp;</td>
+      
+      <td width="380" valign="top">
+      
+        <p>
+    <pre>
+...
+var width=380;
+var height=240;
+...
+var flashvars = {};
+flashvars.v = "video01.mp4|video02.mp4";
+flashvars.img = "videostill.jpg";
+flashvars.repeat = true;
+...
+
+...
+swfobject.embedSWF(movie, replaceDiv, width, height, 
+     flashVersion, express, flashvars, 
+     params, attributes);
     </pre>
   </p>
   <p>
-  The Videoplayer resizes itself to fill the whole SWF - so in this case the player is 380x240px.
+  The Videoplayer resizes itself to fill the whole SWF - so in this case the player is 380x240px.<br /><br />
+  And because we're using a video playlist ans set the repeat parameter to true, both videos are played in a loop over and over again.
   </p>
-	<div id="flashdiv">
-    <div id="flashcontent">
-      alternativ content
-    </div>
-	</div>
+      
+      </td>
+    </tr>
+    <tr>
+    
+      <td>
+        <div id="flashdiv">
+          <div id="flashcontent">
+            alternativ content
+          </div>
+        </div>
+      </td>
+      
+      <td width="50">&nbsp;</td>
+      
+      <td width="380">
+      
+        <div id="flashdiv2">
+          <div id="flashcontent2">
+            alternativ content 2
+          </div>
+        </div>
+      
+      </td>
+    </tr>
+  </table>
 	<p>
     <ul>
       <li>google code: <a href="http://code.google.com/p/apdev-videoplayer/" target="_blank">http://code.google.com/p/apdev-videoplayer/</a></li>
       <li>blog post: <a href="http://apdevblog.com/as3-open-source-videoplayer-out-now/" target="_blank">http://apdevblog.com/as3-open-source-videoplayer-out-now/</a></li>
     </ul>
 	</p>
-	<p>&copy; 2009 apdeblog.com - and some text beneath the video player</p>	
+	<p>&copy; 2009 apdeblog.com</p>	
 </body>
 </html>

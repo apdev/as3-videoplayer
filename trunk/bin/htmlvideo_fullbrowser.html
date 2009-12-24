@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="language" content="en">
+
+<title>apdev videoplayer embed version</title>
+<script type="text/javascript" src="js/swfobject.js"></script>
+<script type="text/javascript" src="js/swffit.js"></script>
+<script type="text/javascript">
+    // <![CDATA[
+
+    var width=380;
+    var height=240;
+	
+    var flashVersion = "9.0.115";
+
+    var movie = "htmlvideo_skinned.swf";
+
+    var movieName = "flashMovie";
+    var bgColor = "#ffffff";
+
+    var express = "expressinstall.swf";
+    
+    var replaceDiv = "flashcontent";
+    
+    var flashvars = {};
+    flashvars.v = "video01.mp4";
+    flashvars.img = "videostill.jpg";
+    flashvars.controlsPaddingLeft = 4;
+		flashvars.controlsPaddingRight = 4;
+
+    var params = {};
+    params.bgcolor = bgColor;
+    params.menu = "false";
+    params.scale = "noscale";
+    params.allowFullScreen = "true";
+    params.allowScriptAccess = "always";
+
+    var attributes = {};
+    attributes.id = movieName;
+
+    swfobject.embedSWF(movie, replaceDiv, width, height, flashVersion, express, flashvars, params, attributes);
+    
+    // minimum size of swf
+    swffit.fit(movieName, width, height);
+    
+  // ]]>
+</script>
+<style type="text/css">
+  
+  html
+  {
+    
+  }
+  
+	body 
+	{
+		background-color: #ffffff;
+		color: #606060;
+		font: 0.85em verdana,arial,helvetica,sans-serif;
+		margin: 25px;
+		padding: 0;
+	}
+
+	#flashcontent 
+	{
+
+	}
+
+</style>
+</head>
+<body>
+	<div id="flashdiv">
+    <div id="flashcontent">
+      you should see our videoplayer here (alternativ content)
+    </div>
+	</div>
+</body>
+</html>

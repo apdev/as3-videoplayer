@@ -76,6 +76,8 @@ package com.apdevblog.ui.video
 		private var _time:VideoTimeLabel;
 		private var _meta:VideoMetadataVo;
 		private var _style:ApdevVideoPlayerDefaultStyle;
+		private var _currentLoadingFraction:Number;
+		private var _currentPlayingFraction:Number;
 
 		/**
 		 * creates a new container for the videoplayer's controls.
@@ -105,6 +107,7 @@ package com.apdevblog.ui.video
 		 */
 		public function updateLoading(fraction:Number):void
 		{
+			_currentLoadingFraction = fraction;
 			_bar.updateLoading(fraction);
 		}
 		
@@ -115,13 +118,26 @@ package com.apdevblog.ui.video
 		 */
 		public function updatePlaying(fraction:Number):void
 		{
-			trace("updatePlaying() >>> " + fraction);
+			_currentPlayingFraction = fraction;
 			_bar.updatePlaying(fraction);
 			
 			if(_meta != null)
 			{
 				_time.update(_meta.duration * fraction);
 			}
+		}
+		
+		/**
+		 * clears all ui elements from stage.
+		 */
+		private function _clear():void
+		{
+			removeChild(_bg);
+			removeChild(_play);
+			removeChild(_time);
+			removeChild(_bar);
+			removeChild(_mute);
+			removeChild(_fullscreen);
 		}
 		
 		/**
@@ -149,6 +165,8 @@ package com.apdevblog.ui.video
 			curSpaceUsed += _mute.width + _fullscreen.width + _time.width;
 						
 			_bar = new VideoStatusBar(availableWidth - (curSpaceUsed + 4 * 3), _style);
+			updateLoading(_currentLoadingFraction);
+			updatePlaying(_currentPlayingFraction);
 			
 			_time.x = width - _style.controlsPaddingRight - _fullscreen.width - _mute.width - 3 - _time.width - 3;
 			_time.y = 3;
@@ -175,6 +193,9 @@ package com.apdevblog.ui.video
 		{
 			_controlsWidth = width;
 			_style = style;
+			
+			_currentPlayingFraction = 0;
+			_currentLoadingFraction = 0;
 			
 			_draw();
 
@@ -212,13 +233,11 @@ package com.apdevblog.ui.video
 			
 			if(_bg != null)
 			{
-				_bg.width = width;
-				_bar.width = width;
-				
-				_mute.x = _bar.x + _bar.width + 4;
+				_clear();
+				_draw();
 			}
 		}
-		
+
 		/**
 		 * videocontrol's current state (visual representation).
 		 */
