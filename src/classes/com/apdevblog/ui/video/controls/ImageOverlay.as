@@ -48,9 +48,11 @@ package com.apdevblog.ui.video.controls
 	{
 		private var _imageLoader:Loader;
 		private var _imageOverlayIcon:IconPlay;
+		private var _imageMask:Shape;
 		private var _videoPlayerWidth:Number;
 		private var _videoPlayerHeight:Number;
 		private var _style:ApdevVideoPlayerDefaultStyle;
+		private var _imageLoaded:Boolean;
 
 		/**
 		 * creates image overlay.
@@ -62,7 +64,7 @@ package com.apdevblog.ui.video.controls
 		{
 			_init(w, h, style);
 		}
-		
+
 		/**
 		 * loads image and displays it on stage.
 		 * 
@@ -77,6 +79,14 @@ package com.apdevblog.ui.video.controls
 			_imageLoader.load(req);
 		}
 		
+		public function resize(width:int, height:int):void
+		{
+			_videoPlayerWidth = width;
+			_videoPlayerHeight = height;
+			
+			_update();
+		}
+
 		/**
 		 * draws all relevant elements on stage.
 		 */
@@ -90,10 +100,10 @@ package com.apdevblog.ui.video.controls
 			_imageOverlayIcon.y = Math.round(_videoPlayerHeight*0.5);
 			addChild(_imageOverlayIcon);
 			
-			var imageMask:Shape = Draw.rect(_videoPlayerWidth, _videoPlayerHeight, 0xFF0000, 1);
-			addChild(imageMask);
+			_imageMask = Draw.rect(_videoPlayerWidth, _videoPlayerHeight, 0xFF0000, 1);
+			addChild(_imageMask);
 			
-			mask = imageMask;
+			mask = _imageMask;
 		}
 		
 		/**
@@ -104,6 +114,8 @@ package com.apdevblog.ui.video.controls
 			_videoPlayerWidth = w;
 			_videoPlayerHeight = h;
 			_style = style;
+
+			_imageLoaded = false;
 			
 			buttonMode = true;
 			
@@ -117,19 +129,19 @@ package com.apdevblog.ui.video.controls
 			_imageLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, onImageLoaded, false, 0, true);
 		}
 		
-		/**
-		 * event handler - called when overlay is clicked.
-		 */
-		private function onClickImageOverlay(event:MouseEvent):void
+		private function _update():void
 		{
-			dispatchEvent(new VideoControlsEvent(VideoControlsEvent.TOGGLE_PLAY_PAUSE, true, true));
-		}
-
-		/**
-		 * event handler - called when image is loaded.
-		 */
-		private function onImageLoaded(event:Event):void
-		{
+			if(_imageOverlayIcon != null)
+			{
+				_imageOverlayIcon.x = Math.round(_videoPlayerWidth*0.5);
+				_imageOverlayIcon.y = Math.round(_videoPlayerHeight*0.5);
+			}
+			
+			if(!_imageLoaded)
+			{
+				return;
+			}
+			
 			var imageRatio:Number = _imageLoader.width / _imageLoader.height;
 			var w:Number = _videoPlayerWidth;
 			var h:Number = _videoPlayerHeight;
@@ -161,8 +173,28 @@ package com.apdevblog.ui.video.controls
 				}
 			}
 			
+			_imageMask.width = _videoPlayerWidth;
+			_imageMask.height = _videoPlayerHeight;
+			
 			_imageLoader.x = Math.round( (w - _imageLoader.width) * 0.5 );
 			_imageLoader.y = Math.round( (h - _imageLoader.height) * 0.5 ); 
+		}
+		
+		/**
+		 * event handler - called when overlay is clicked.
+		 */
+		private function onClickImageOverlay(event:MouseEvent):void
+		{
+			dispatchEvent(new VideoControlsEvent(VideoControlsEvent.TOGGLE_PLAY_PAUSE, true, true));
+		}
+
+		/**
+		 * event handler - called when image is loaded.
+		 */
+		private function onImageLoaded(event:Event):void
+		{
+			_imageLoaded = true;
+			_update();
 		}
 		
 		/**

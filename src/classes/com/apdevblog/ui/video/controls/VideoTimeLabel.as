@@ -79,7 +79,7 @@ package com.apdevblog.ui.video.controls
 			if(_state == VideoTimeLabel.STATE_COUNT_DOWN)
 			{
 				// cound down from total to 0
-				var total:int = _meta != null ? _meta.duration : 0; 
+				var total:Number = _meta != null ? _meta.duration : 0; 
 				time = total - time;
 				if(time < 0)
 				{

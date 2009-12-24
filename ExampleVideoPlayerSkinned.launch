@@ -2,7 +2,7 @@
 <launchConfiguration type="com.powerflasher.fdt.ui.MxmlcGroup">
 <stringAttribute key="APP_ARGUMENTS" value=""/>
 <stringAttribute key="ARGUMENTS" value="-default-size 550 400 -default-frame-rate 31 -default-background-color 0xFFFFFF -library-path {flexSDK}/frameworks/locale/en_US"/>
-<stringAttribute key="FLEX_SDK_NAME" value="Flex_3_SDK_0"/>
+<stringAttribute key="FLEX_SDK_NAME" value="Flex_3_SDK_5"/>
 <stringAttribute key="MAIN_CLASS" value="src/classes/com/apdevblog/examples/ExampleVideoPlayerSkinned.as"/>
 <stringAttribute key="OUTPUT" value="bin/videoplayer_skinned.swf"/>
 <booleanAttribute key="PASS_CP" value="true"/>

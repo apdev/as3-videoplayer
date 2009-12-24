@@ -241,7 +241,6 @@ package com.apdevblog.ui.video.controls
 		 */
 		override public function set width(width:Number):void
 		{
-			trace("VIDEOSTATUSBAR >>> set width() >>> ");
 			_barBg.width = width;
 			
 			_createDynamicBars();

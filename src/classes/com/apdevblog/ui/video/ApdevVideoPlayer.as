@@ -141,6 +141,7 @@ package com.apdevblog.ui.video
 		private var _previewUrlOrRequest:*;
 		private var _image:ImageOverlay;
 		private var _loadBeforePlay:Boolean;
+		private var _isFullscreen:Boolean;
 
 		/**
 		 * creates a new ApdevVideoPlayer with specified dimensions.
@@ -231,11 +232,55 @@ package com.apdevblog.ui.video
 			// hide image
 			_image.visible = false;
 			
-			_ns.resume();
+			if(videoState == ApdevVideoState.VIDEO_STATE_STOPPED)
+			{
+				_ns.seek(0);
+			}
+			else
+			{
+				_ns.resume();
+			}
 			_positionTimer.start();
 			
 			videoState = ApdevVideoState.VIDEO_STATE_PLAYING;
 		}
+		
+		/**
+		 * resizes the whole videoplayer.
+		 * 
+		 * @param width		new width of the videoplayer
+		 * @param height	new height of the videoplayer
+		 */
+		public function resize(width:int, height:int):void
+		{
+			if(stage.displayState == StageDisplayState.FULL_SCREEN)
+			{
+				return;
+			}
+			
+			videoPlayerWidth = width;
+			videoPlayerHeight = height;
+			
+			if(_videoBg != null)
+			{
+				_videoBg.width = width;
+				_videoBg.height = height;
+			}
+			
+			_resizeVideo(width, height);
+			
+			_image.resize(width, height);
+			
+			_videoControls.width = width;
+			if(controlsOverVideo)
+			{
+				_videoControls.y = videoPlayerHeight - _videoControls.height; 
+			}
+			else
+			{
+				_videoControls.y = videoPlayerHeight; 
+			}
+		}			
 		
 		/**
 		 * seeks to specified position in video.
@@ -260,6 +305,12 @@ package com.apdevblog.ui.video
 			if(!scrubbing)
 			{
 				_scrubbingIndex = 0;
+				
+				if(!_positionTimer.running)
+				{
+					_positionTimer.reset();
+					_positionTimer.start();
+				}
 			}
 			else
 			{
@@ -298,11 +349,18 @@ package com.apdevblog.ui.video
 		public function onMetaData(data:Object):void
 		{
 			if(videoMetaData == null)
-			{				
+			{
 				videoMetaData = new VideoMetadataVo(data);
 				if(!isNaN(videoMetaData.width) && !isNaN(videoMetaData.height))
 				{
-					_resizeVideo(_videoPlayerWidth, _videoPlayerHeight);
+					if(stage.displayState == StageDisplayState.FULL_SCREEN)
+					{
+						_resizeVideo(stage.stageWidth, stage.stageHeight);
+					}
+					else
+					{
+						_resizeVideo(_videoPlayerWidth, _videoPlayerHeight);						
+					}
 				}
 			}
 		}
@@ -350,6 +408,7 @@ package com.apdevblog.ui.video
 			_scrubbingIndex = 0;
 			_autoPlay = false;
 			_loadBeforePlay = false;
+			_isFullscreen = false;
 			_lastFullscreenTakeover = _fullscreenTakeover = false;
 			
 			if(style == null)
@@ -432,6 +491,11 @@ package com.apdevblog.ui.video
 		 */
 		private function _resizeVideo(width:Number, height:Number):void
 		{
+			if(videoMetaData == null)
+			{
+				return;
+			}
+			
 			var videoRatio:Number = videoMetaData.width / videoMetaData.height;
 			var playerRatio:Number = width / height;
 			
@@ -539,7 +603,9 @@ package com.apdevblog.ui.video
 			
 			_videoControls.updateDisplayState(stage.displayState);
 			
-			if(event.fullScreen)
+			_isFullscreen = event.fullScreen;
+			
+			if(_isFullscreen)
 			{
 				_lastStageAlign = stage.align; 
 				stage.align = StageAlign.TOP_LEFT;
