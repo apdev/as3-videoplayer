@@ -41,7 +41,6 @@ package com.apdevblog.ui.video
 	import flash.events.NetStatusEvent;
 	import flash.events.SecurityErrorEvent;
 	import flash.events.TimerEvent;
-	import flash.media.SoundMixer;
 	import flash.media.SoundTransform;
 	import flash.media.Video;
 	import flash.net.NetConnection;
@@ -879,7 +878,11 @@ package com.apdevblog.ui.video
 		public function set volume(volume:Number):void
 		{
 			_volume = volume;
-			SoundMixer.soundTransform = new SoundTransform(volume); 
+			
+			if(_ns != null)
+			{
+				_ns.soundTransform = new SoundTransform(volume);
+			}
 			
 			_videoControls.volume = volume;
 		}
